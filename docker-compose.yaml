@@ -1,12 +1,35 @@
+# version: '3'
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8000:3000"
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=3000
+#       - HOSTNAME=localhost
+
 version: '3'
 services:
   app:
     build:
-      context: .
+      context: ./nextjs-app
       dockerfile: Dockerfile
     ports:
       - "8000:3000"
+    depends_on:
+      - postgres
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - HOSTNAME=localhost
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://postgres:12345678@postgres:5432/mydb  # Change 'mydb' to your desired database name
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: rtchat  # Change 'mydb' to your desired database name
